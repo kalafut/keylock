@@ -10,7 +10,7 @@ At < 60 lines, you may find it easier to just copy the code into your project th
 
 // Locks can be keyed with any comparable type. The timeout can be set to 0 to
 // disable automatic unlocking.
-l := NewKeylock[string](time.Second)
+l := NewLock[string](time.Second)
 
 l.Lock("foo")      // true
 l.Lock("foo")      // false

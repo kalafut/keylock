@@ -5,17 +5,17 @@ import (
 	"time"
 )
 
-type Keylock[T comparable] struct {
+type Lock[T comparable] struct {
 	lock       sync.Mutex
 	keylocks   map[T]time.Time
 	expiration time.Duration
 	lastClean  time.Time
 }
 
-// NewLock returns a new Keylock with the given expiration. If expiration is
+// NewKeylock returns a new Keylock with the given expiration. If expiration is
 // 0, then locks never expire automatically.
-func NewLock[T comparable](d time.Duration) *Keylock[T] {
-	return &Keylock[T]{
+func NewLock[T comparable](d time.Duration) *Lock[T] {
+	return &Lock[T]{
 		keylocks:   make(map[T]time.Time),
 		expiration: d,
 	}
@@ -23,7 +23,7 @@ func NewLock[T comparable](d time.Duration) *Keylock[T] {
 
 // Lock attempts to lock the given id. It returns true if the lock was acquired,
 // and false otherwise. It does not block.
-func (r *Keylock[T]) Lock(id T) bool {
+func (r *Lock[T]) Lock(id T) bool {
 	r.lock.Lock()
 	defer r.lock.Unlock()
 
@@ -37,7 +37,7 @@ func (r *Keylock[T]) Lock(id T) bool {
 }
 
 // Unlock unlocks the given id. It is a no-op if the id is not locked.
-func (r *Keylock[T]) Unlock(id T) {
+func (r *Lock[T]) Unlock(id T) {
 	r.lock.Lock()
 	defer r.lock.Unlock()
 
@@ -45,7 +45,7 @@ func (r *Keylock[T]) Unlock(id T) {
 }
 
 // clean removes expired locks. It must be called with the lock held.
-func (r *Keylock[T]) clean() {
+func (r *Lock[T]) clean() {
 	if len(r.keylocks) == 0 || r.expiration == 0 || time.Since(r.lastClean) < r.expiration {
 		return
 	}
