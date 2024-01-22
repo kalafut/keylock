@@ -1,4 +1,4 @@
-package main
+package keylock
 
 import (
 	"testing"
@@ -6,7 +6,7 @@ import (
 )
 
 func TestLock(t *testing.T) {
-	l := NewKeylock[string](time.Second)
+	l := NewLock[string](time.Second)
 
 	if !l.Lock("foo") {
 		t.Error("expected lock to succeed")
@@ -24,7 +24,7 @@ func TestLock(t *testing.T) {
 }
 
 func TestLockClean(t *testing.T) {
-	l := NewKeylock[string](time.Second)
+	l := NewLock[string](time.Second)
 
 	if !l.Lock("foo") {
 		t.Error("expected lock to succeed")
@@ -46,7 +46,7 @@ func TestLockClean(t *testing.T) {
 		t.Error("expected lock to succeed")
 	}
 
-	l2 := NewKeylock[string](0)
+	l2 := NewLock[string](0)
 	l2.Lock("foo")
 	time.Sleep(1500 * time.Millisecond)
 	if l2.Lock("foo") {

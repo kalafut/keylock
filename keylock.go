@@ -1,4 +1,4 @@
-package main
+package keylock
 
 import (
 	"sync"
@@ -12,9 +12,9 @@ type Keylock[T comparable] struct {
 	lastClean  time.Time
 }
 
-// NewKeylock returns a new Keylock with the given expiration. If expiration is
+// NewLock returns a new Keylock with the given expiration. If expiration is
 // 0, then locks never expire automatically.
-func NewKeylock[T comparable](d time.Duration) *Keylock[T] {
+func NewLock[T comparable](d time.Duration) *Keylock[T] {
 	return &Keylock[T]{
 		keylocks:   make(map[T]time.Time),
 		expiration: d,
